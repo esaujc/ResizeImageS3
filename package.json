@@ -16,7 +16,7 @@
     "dotenv": "^16.3.1",
     "express": "^4.18.2",
     "image-size": "^1.0.2",
-    "md5-file": "^5.0.0",
+    "md5": "^2.3.0",    
     "module-alias": "^2.2.3",
     "multer": "^1.4.5-lts.1",
     "uuid4": "^2.0.3"
@@ -29,6 +29,6 @@
     "@data": "src/data",
     "@controllers": "src/controllers",
     "@utils": "src/utils",
-    "@inputs":"inputs"
+    "@input": "input"
   }
 }

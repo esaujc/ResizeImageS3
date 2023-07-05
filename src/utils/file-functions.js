@@ -21,15 +21,13 @@ async function asyncReadContent(dataPath, callback) {
 
 async function asyncCreateContent(dataPath, payload, callback) {
   
-  const newTaskId = uuid4();
   const readData = await asyncReadContent(dataPath);
-  payload.id = newTaskId;
 
-  readData[newTaskId.toString()] = payload;
+  readData[payload.id] = payload;
   const newData = JSON.stringify(readData, null, 2);
 
   await writeFile(path.resolve(__dirname, dataPath), newData, "utf8");
-  return newTaskId;
+  return;
 }
 
 async function asyncModifyContent(dataPath, payload, taskId, callback) {

@@ -7,7 +7,7 @@ const sizeOf = require('image-size');
 
 const path = require("path");
 const AWS = require('aws-sdk');
-const uuid = require("uuid").v4;
+const uuid4 = require("uuid4");
 const fs = require("fs");
 
 // {}
@@ -57,14 +57,17 @@ const createTask = async (req, res, next) => {
       if(imageS3.state != 0){
         res.status(500).send({status: 500, state:'Error' , message: imageS3.data});
       }
-      else{      
+      else{
+        const newId = uuid4();
         const task_payload = {
+          id: newId,
           created: new Date(),
           state: 'in_progress',
           path: fileData.path
         };
-      
+        
         const image_payload = {
+          id: newId,
           created: new Date(),
           md5: md5_File,
           height: imageInfo.height,
@@ -73,11 +76,14 @@ const createTask = async (req, res, next) => {
           path: fileData.path,
           filename: fileData.filename,
           originalname: fileData.originalname,
-          bucketUrl: imageS3.Location
+          bucketUrl: imageS3.data.Location,
+          name: fileData.originalname.replace(/\.[^/.]+$/, "")          
+
         };
         
-        const taskId = await asyncCreateContent(configuration.tasksDataPath, task_payload);
-        const image = await asyncCreateContent(configuration.imagesDataPath, image_payload);
+        const lambda = await resizeImageWithLamda(image_payload);
+        await asyncCreateContent(configuration.tasksDataPath, task_payload);
+        await asyncCreateContent(configuration.imagesDataPath, image_payload);
 
         res.status(200).json({status: 200, message: 'Task created successfully'});
       }
@@ -138,7 +144,7 @@ const uploadToS3 = async (file) => {
       });
       const s3 = new AWS.S3()
     
-      const fileBody = fs.readFileSync(path.resolve(__dirname,`../../inputs/${file.filename}`));
+      const fileBody = fs.readFileSync(path.resolve(__dirname,`../../input/${file.filename}`));
       const uploadPayload = {
         Bucket: process.env.AWS_SOURCE_BUCKET,
         Key: `input/${file.filename}`,
@@ -159,6 +165,43 @@ const uploadToS3 = async (file) => {
       return {state: 2, data: error}
     }
 };
+
+const resizeImageWithLamda = async (image_payload) => {
+  try {
+    AWS.config.update({
+      accessKeyId: process.env.ACCESS_KEY_ID,
+      secretAccessKey: process.env.SECRET_ACCESS_KEY,
+      region: process.env.AWS_REGION,
+    });
+
+    // LAMBDA START
+      const lambda = new AWS.Lambda();
+      const params = {
+        FunctionName: configuration.jobSubmitImageLambda,   /* required */
+        Payload: JSON.stringify(image_payload),
+        InvocationType: 'Event'
+      };      
+      lambda.invoke(params, function(err, data) {
+        if (err) {
+          //Todo: deleteVideo?
+          console.log('Lambda Error', err)
+          return false;
+
+        }
+        else {
+          console.log('Lambda OK')
+          return true;
+        }
+      });
+    // LAMBDA END
+
+
+  } catch (err) {
+    console.log('Lambda Catch Error ', err)
+    return false;
+
+  }
+}; 
 
 module.exports = {
     getAllTasks,
