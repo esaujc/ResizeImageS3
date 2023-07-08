@@ -6,7 +6,11 @@ require('dotenv').config();
 const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
+const cron = require('node-cron');
 
+cron.schedule('* * * * *', () => {
+  console.log('running a task every minute');  
+});
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());

@@ -18,6 +18,7 @@ const tasksController = require('@controllers/tasks-controller');
 const tasksRouter = (app) => {
 
     app.get('/api/tasks', tasksController.getTaskById); 
+    app.get('/api/tasks/inprogress', tasksController.getInProgressTasks)
     app.post('/api/tasks', upload.single('file'), tasksController.createTask); 
     app.put('/api/tasks/:id', tasksController.modifyTask);
     app.delete('/api/tasks/:id', tasksController.deleteTask);
