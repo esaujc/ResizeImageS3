@@ -54,7 +54,7 @@ The architecture used is quite simple:
 ### Folder explanation
 input - Folder where uploaded images are stored.
 output - Folder where the resized images are downloaded.
-lambda_aws_resize - folder containing the Lambda function used for resizing.
+lambda_aws_resize - folder containing the Lambda function used for resizing. Based on "https://github.com/amazon-archives/serverless-image-resizing".
 src/controllers/tasks-controller.js
 - File where the functions that manage the CRUD are located,
 src/data
