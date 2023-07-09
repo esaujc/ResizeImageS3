@@ -111,7 +111,7 @@ server.js
 postman_collection.json
 - File to be able to test the endpoints.
 
-#### env variables
+### ENV variables
 
 - PORT=
 - ACCESS_KEY_ID=
