@@ -2,8 +2,6 @@
 const path = require("path");
 const fs = require("fs");
 const { readFile, writeFile } = require("fs/promises");
-const uuid4 = require("uuid4");
-
 
 function readContent(dataPath, callback) {
   fs.readFile(path.resolve(__dirname, dataPath),'utf8', (err, content) => {

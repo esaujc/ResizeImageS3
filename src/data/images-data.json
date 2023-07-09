@@ -1,0 +1,15 @@
+{
+  "5c20abe9-49ef-4cc7-b171-3059b5d2134f": {
+    "id": "5c20abe9-49ef-4cc7-b171-3059b5d2134f",
+    "created": "2023-07-08T12:29:11.660Z",
+    "md5": "d41d8cd98f00b204e9800998ecf8427e",
+    "height": 357,
+    "width": 343,
+    "type": "jpg",
+    "path": "input/error2.jpg",
+    "filename": "error2.jpg",
+    "originalname": "error2.jpg",
+    "bucketUrl": "https://capitol-test.s3.amazonaws.com/input/error2.jpg",
+    "name": "error2"
+  }
+}

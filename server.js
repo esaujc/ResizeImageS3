@@ -7,9 +7,11 @@ const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
 const cron = require('node-cron');
+const {updateInProgressTasks} = require('./src/utils/tasks-functions.js')
 
-cron.schedule('* * * * *', () => {
-  console.log('running a task every minute');  
+cron.schedule('* * * * *', async () => {
+  console.log('Checking task state every minute...');  
+  await updateInProgressTasks();
 });
 
 app.use(bodyParser.urlencoded({ extended: false }));
